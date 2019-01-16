@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+    <title>WordBeater!</title>
+  </head>
+  <body>
+    <div class="container mt-5">
+      <div class="row border">
+        <div class="col-md-10 mx-auto text-center">
+          <h1 class="display-3 text-uppercase font-weight-bold pt-3 pb-3 mt-3">
+            Word 
+            <br> 
+            Beater!
+          </h1>
+          <p class="mb-3">I-Type ang salita sa screen sa binigay na segundo. Ang segundo ay pabilis ng pabilis habang tumatagal ang laro. Para magsimula muli i-type lang ulit ang salita at magrereset ang score.</p>
+          <hr> 
+          <h1 class="m-3 display-4 " id="current-word">Game</h1>
+          <div class="input-group input-group-lg">
+            <input type="text" class="form-control mb-3" id="input-word" placeholder="I-enter ang salita">
+          </div>
+          <hr> 
+          <div class="row m-3">
+            <div class="col mt-5">
+              <h3 class="display-5 text-uppercase">Level: <span id="level">Easy</span></h1>
+              <h1 class="display-5 text-uppercase" id="message"></h1>
+            </div>
+            <div class="col">
+              <h1 class="display-1 text-uppercase font-weight-bold" id="time">5</h1>
+              <h5>Seconds</h5>
+            </div>
+            <div class="col">
+              <h1 class="display-1 text-uppercase font-weight-bold" id="score">0</h1>
+              <h5>Score</h5>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="container text-center mt-3 pt-3 card">
+      <p>Copyright &copy; 2019</p>
+    </footer>
+
+    <script>
+      // event listener
+      window.addEventListener('load', init);
+
+      // Globals
+      let time = 5;
+      let score = 0;
+      let isPlaying;
+
+      // DOM Elements
+      const inputWord    = document.querySelector('#input-word');
+      const currentWord  = document.querySelector('#current-word');
+      const scoreDisplay = document.querySelector('#score');
+      const timeDisplay  = document.querySelector('#time');
+      const message      = document.querySelector('#message');
+      const level        = document.querySelector('#level');
+
+      const levelDescription = [
+        'Easy',
+        'Medium',
+        'Hard',
+        'Extreme',
+        'Ikaw na!'
+      ]
+
+      //word array
+      const words = [
+        'hat',
+        'river',
+        'lucky',
+        'statue',
+        'generate',
+        'stubborn',
+        'cocktail',
+        'runaway',
+        'joke',
+        'developer',
+        'establishment',
+        'hero',
+        'javascript',
+        'nutrition',
+        'revolver',
+        'echo',
+        'siblings',
+        'investigate',
+        'horrendous',
+        'symptom',
+        'laughter',
+        'magic',
+        'master',
+        'space',
+        'definition'
+      ];
+
+      // initialize the game
+      function init(){
+
+        // get a random word
+        showWord(words);
+
+        // match word input vs current word
+        inputWord.addEventListener('input', startGame);
+
+        // run the countdown
+        setInterval(countdown, 1000);
+
+        // check the game status
+        setInterval(checkStatus, 50);
+
+      }
+
+      // function that get random word
+      function showWord(words){
+
+        // get a random index
+        const randIndex = Math.floor(Math.random() * words.length);
+        
+        //output a random word
+        currentWord.innerHTML = words[randIndex];
+
+      }
+
+      // Countdown 
+      function countdown(){
+
+        // check time is not run out
+        if(time > 0) {
+          // deceement
+          time--;
+        } 
+        else if (time === 0) {
+          // the game is over
+          isPlaying = false;
+        }
+
+        // show timer
+        timeDisplay.innerHTML = time;
+
+      }
+
+      function checkStatus() {
+        if(!isPlaying && time ===0){
+          message.innerHTML= 'Game Over';
+          score = 0;
+        }
+      }
+
+      function startGame() {
+
+        if(matchWords()) {
+
+          if(score === 0) {
+            time = 6;
+            level.innerHTML = levelDescription[0];
+          } 
+          else if(score >= 3 && score <= 5) {
+            time = 5;
+            level.innerHTML = levelDescription[1];
+          }
+          else if(score >= 6 && score <= 8){
+            time = 4;
+            level.innerHTML = levelDescription[2];
+          }
+          else if(score >= 9 && score <= 12){
+            time = 3;
+            level.innerHTML = levelDescription[3];
+          }
+          else if(score >= 13){
+            time = 2;
+            level.innerHTML = levelDescription[4];
+          }
+
+          isPlaying = true;
+          showWord(words);
+          inputWord.value = '';
+          score++;
+
+        }
+
+        scoreDisplay.innerHTML = score;
+
+      }
+
+      function matchWords() {
+
+        if(inputWord.value === currentWord.innerHTML) {
+          message.innerHTML = 'Correct';
+          return true;
+        }
+        else {
+          message.innerHTML = '';
+          return false;
+        }
+
+      }
+
+    </script>
+  </body>
+</html>
